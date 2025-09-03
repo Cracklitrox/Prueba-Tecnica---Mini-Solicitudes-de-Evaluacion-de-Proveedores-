@@ -9,6 +9,7 @@ alembic
 
 # Validación y Schemas
 pydantic
+pydantic[email]
 pydantic-settings
 
 # Seguridad y JWT
@@ -21,3 +22,4 @@ httpx
 
 # Utilidades
 python-dotenv
+python-multipart
