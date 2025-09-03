@@ -1,1 +1,1 @@
-# Prueba-T-cnica-Mini-Solicitudes-de-Evaluaci-n-de-Proveedores-
+# Prueba Tecnica - Mini "Solicitudes de Evaluación de Proveedores"
