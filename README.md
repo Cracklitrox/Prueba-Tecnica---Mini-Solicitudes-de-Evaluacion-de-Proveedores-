@@ -19,7 +19,7 @@ Sigue estos pasos para levantar el proyecto en tu máquina local.
 ```bash
 # 1. Clonar y entrar al proyecto
 git clone https://github.com/Cracklitrox/Prueba-Tecnica---Mini-Solicitudes-de-Evaluacion-de-Proveedores-.git
-cd Prueba-Tecnica---Mini-Solicitudes-de-Evaluacion-de-Proveedores--main
+cd PruebaTecnica
 ```
 
 # 2. Variables de entorno
