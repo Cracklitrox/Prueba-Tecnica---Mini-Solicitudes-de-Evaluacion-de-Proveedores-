@@ -42,8 +42,8 @@ docker compose up -d --build
 
 # 4. Migraciones y seed de datos
 ```bash
-docker compose exec fastapi_api alembic upgrade head
-docker compose exec fastapi_api python seed.py
+docker compose exec api alembic upgrade head
+docker compose exec api python seed.py
 ```
 
 # 5. Levantar frontend
