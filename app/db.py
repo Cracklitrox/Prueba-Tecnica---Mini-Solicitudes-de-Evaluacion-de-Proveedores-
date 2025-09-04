@@ -2,8 +2,9 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 
+from .config import settings
 
-SQLALCHEMY_DATABASE_URL = "postgresql+psycopg2://usuario_prueba:contrasena@localhost/proveedores_db"
+SQLALCHEMY_DATABASE_URL = settings.DATABASE_URL
 
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
 

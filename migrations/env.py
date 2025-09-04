@@ -4,6 +4,7 @@ from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 
 from alembic import context
+from app.config import settings
 
 import sys
 import os
@@ -16,6 +17,10 @@ from app.models import company, request, user
 
 
 config = context.config
+
+# Esta línea establece la URL de la base de datos para Alembic
+config.set_main_option("sqlalchemy.url", settings.DATABASE_URL)
+
 
 # Agrega el directorio principal al sys.path para que las importaciones funcionen correctamente
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
