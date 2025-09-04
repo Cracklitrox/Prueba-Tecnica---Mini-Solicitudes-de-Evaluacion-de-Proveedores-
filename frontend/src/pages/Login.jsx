@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import './Login.css';
 
 function Login({ onLoginSuccess }) {
   const [email, setEmail] = useState('');
@@ -29,7 +30,6 @@ function Login({ onLoginSuccess }) {
       }
 
       const data = await response.json();
-
       onLoginSuccess(data.access_token);
 
     } catch (err) {
@@ -40,19 +40,33 @@ function Login({ onLoginSuccess }) {
   };
 
   return (
-    <div>
-      <h2>Iniciar Sesión</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Email:</label>
-          <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+    <div className="login-container">
+      <h2 className="login-title">Iniciar Sesión</h2>
+      <form onSubmit={handleSubmit} className="login-form">
+        <div className="form-group">
+          <label htmlFor="email">Email</label>
+          <input
+            id="email"
+            className="form-control"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
         </div>
-        <div>
-          <label>Contraseña:</label>
-          <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+        <div className="form-group">
+          <label htmlFor="password">Contraseña</label>
+          <input
+            id="password"
+            className="form-control"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
         </div>
-        {error && <p style={{ color: 'red' }}>{error}</p>}
-        <button type="submit" disabled={isLoading}>
+        {error && <p className="error-message">{error}</p>}
+        <button type="submit" className="btn btn-primary" disabled={isLoading}>
           {isLoading ? 'Entrando...' : 'Entrar'}
         </button>
       </form>

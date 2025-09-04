@@ -1,6 +1,9 @@
 import { useState, useEffect, useCallback } from 'react';
 import * as apiService from '../services/apiService';
+import { DashboardCharts } from '../components/DashboardCharts';
+import './Requests.css';
 
+// --- Componente para el Formulario de Nueva Solicitud ---
 const NewRequestForm = ({ companies, onFormSubmit, onCancel }) => {
   const [newRequestData, setNewRequestData] = useState({
     company_id: '',
@@ -39,24 +42,28 @@ const NewRequestForm = ({ companies, onFormSubmit, onCancel }) => {
   };
 
   return (
-    <div className="form-container" style={{ border: '1px solid grey', padding: '20px', margin: '20px 0' }}>
+    <div className="form-container" style={{ border: '1px solid #333', padding: '20px', margin: '20px 0', backgroundColor: '#242424', borderRadius: '8px' }}>
       <h3>Nueva Solicitud</h3>
-      <form onSubmit={handleSubmit}>
-        <select name="company_id" value={newRequestData.company_id} onChange={handleChange} required>
+      <form onSubmit={handleSubmit} style={{display: 'flex', flexDirection: 'column', gap: '1rem'}}>
+        <select className="form-control" name="company_id" value={newRequestData.company_id} onChange={handleChange} required>
           <option value="">-- Selecciona una empresa --</option>
           {companies.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
         </select>
-        <label><input type="checkbox" name="pep_flag" checked={newRequestData.risk_inputs.pep_flag} onChange={handleChange} /> PEP Flag</label>
-        <label><input type="checkbox" name="sanction_list" checked={newRequestData.risk_inputs.sanction_list} onChange={handleChange} /> Sanction List</label>
-        <label>Pagos Atrasados: <input type="number" name="late_payments" value={newRequestData.risk_inputs.late_payments} onChange={handleChange} min="0" /></label>
-        <button type="submit" disabled={isSubmitting}>{isSubmitting ? 'Creando...' : 'Crear Solicitud'}</button>
-        <button type="button" onClick={onCancel} disabled={isSubmitting}>Cancelar</button>
+        <div style={{display: 'flex', gap: '1rem', alignItems: 'center'}}>
+            <label><input type="checkbox" name="pep_flag" checked={newRequestData.risk_inputs.pep_flag} onChange={handleChange} /> PEP Flag</label>
+            <label><input type="checkbox" name="sanction_list" checked={newRequestData.risk_inputs.sanction_list} onChange={handleChange} /> Sanction List</label>
+            <label>Pagos Atrasados: <input type="number" className="form-control" name="late_payments" value={newRequestData.risk_inputs.late_payments} onChange={handleChange} min="0" style={{width: '60px'}} /></label>
+        </div>
+        <div style={{display: 'flex', gap: '1rem'}}>
+            <button type="submit" className="btn btn-primary" disabled={isSubmitting}>{isSubmitting ? 'Creando...' : 'Crear Solicitud'}</button>
+            <button type="button" className="btn btn-secondary" onClick={onCancel} disabled={isSubmitting}>Cancelar</button>
+        </div>
       </form>
     </div>
   );
 };
 
-
+// --- Componente Principal de la Página de Solicitudes ---
 function Requests() {
   const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -71,17 +78,20 @@ function Requests() {
       const companiesData = await apiService.getCompanies();
       setCompanies(companiesData.items);
     } catch (err) {
+      console.error(err.message);
       setError(err.message);
     }
   }, []);
-
+  
   const fetchRequests = useCallback(async () => {
     setLoading(true);
     try {
       const requestsData = await apiService.getRequests(filters);
       setRequests(requestsData.items);
       setTotal(requestsData.total);
+      setError('');
     } catch (err) {
+      console.error(err.message);
       setError(err.message);
     } finally {
       setLoading(false);
@@ -100,7 +110,7 @@ function Requests() {
     const { name, value } = event.target;
     setFilters(prev => ({ ...prev, [name]: value, page: 1 }));
   };
-
+  
   const handleNewRequestSubmit = async (newRequestData) => {
     try {
       await apiService.createRequest(newRequestData);
@@ -115,12 +125,14 @@ function Requests() {
   const totalPages = Math.ceil(total / filters.page_size);
 
   return (
-    <div>
+    <div className="requests-page-container">
       <h2>Listado de Solicitudes</h2>
-      {!showForm && <button onClick={() => setShowForm(true)} style={{marginBottom: '20px'}}>Nueva Solicitud</button>}
+      <DashboardCharts requests={requests} />
+      
+      {!showForm && <button className="btn btn-primary" onClick={() => setShowForm(true)} style={{marginBottom: '20px'}}>Nueva Solicitud</button>}
       {showForm && <NewRequestForm companies={companies} onFormSubmit={handleNewRequestSubmit} onCancel={() => setShowForm(false)} />}
       
-      <div className="filters" style={{ marginBottom: '20px', display: 'flex', gap: '10px' }}>
+      <div className="filters-container">
         <input name="q" value={filters.q} onChange={handleFilterChange} placeholder="Buscar por empresa..." />
         <select name="status" value={filters.status} onChange={handleFilterChange}>
           <option value="">Todos los Status</option>
@@ -138,7 +150,7 @@ function Requests() {
           {requests.length === 0 ? (
             <p>No se encontraron solicitudes con los filtros actuales.</p>
           ) : (
-            <table>
+            <table className="requests-table">
               <thead>
                 <tr>
                   <th>ID (corto)</th>
@@ -162,15 +174,15 @@ function Requests() {
             </table>
           )}
           
-          <div className="pagination" style={{ marginTop: '20px' }}>
-            <button
+          <div className="pagination-container">
+            <button className="btn btn-secondary"
               onClick={() => setFilters(f => ({ ...f, page: f.page - 1 }))}
               disabled={filters.page <= 1}
             >
               Anterior
             </button>
             <span> Página {filters.page} de {totalPages} </span>
-            <button
+            <button className="btn btn-secondary"
               onClick={() => setFilters(f => ({ ...f, page: f.page + 1 }))}
               disabled={filters.page >= totalPages}
             >
