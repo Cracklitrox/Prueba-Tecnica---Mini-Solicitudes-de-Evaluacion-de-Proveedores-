@@ -1,9 +1,11 @@
 from fastapi import FastAPI
-from app.api import auth
+from app.api import auth, companies
 
-app = FastAPI(title="Proyecto tecnico")
+app = FastAPI(title="API de Evaluación de Proveedores")
 
 app.include_router(auth.router, prefix="/auth", tags=["Auth"])
+app.include_router(companies.router, prefix="/companies", tags=["Companies"])
+
 
 @app.get("/")
 def read_root():
