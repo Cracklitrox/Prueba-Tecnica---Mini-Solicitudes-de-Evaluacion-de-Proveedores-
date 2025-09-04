@@ -1,5 +1,5 @@
 import uuid
-from sqlalchemy import String, func
+from sqlalchemy import String, func, DateTime
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from datetime import datetime
 from app.db import Base
@@ -12,5 +12,7 @@ class Company(Base):
     tax_id: Mapped[str | None] = mapped_column(String(50)) # Union[str, None]
     country: Mapped[str] = mapped_column(String(2), default="CL", nullable=False)
     created_at: Mapped[datetime] = mapped_column(server_default=func.now())
+
+    deleted_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True)) # Para soft delete
 
     requests: Mapped[list["Request"]] = relationship(back_populates="company")
