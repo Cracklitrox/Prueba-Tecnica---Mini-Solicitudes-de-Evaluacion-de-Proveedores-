@@ -1,25 +1,18 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Login from './pages/Login';
 import Requests from './pages/Requests';
 
 function App() {
   const [token, setToken] = useState(localStorage.getItem('access_token'));
 
-  useEffect(() => {
-    const handleStorageChange = () => {
-      setToken(localStorage.getItem('access_token'));
-    };
-
-    window.addEventListener('storage', handleStorageChange);
-
-    return () => {
-      window.removeEventListener('storage', handleStorageChange);
-    };
-  }, []);
+  const handleLoginSuccess = (newToken) => {
+    localStorage.setItem('access_token', newToken);
+    setToken(newToken);
+  };
 
   return (
-    <div>
-      {token ? <Requests /> : <Login />}
+    <div className="app-container">
+      {token ? <Requests /> : <Login onLoginSuccess={handleLoginSuccess} />}
     </div>
   );
 }

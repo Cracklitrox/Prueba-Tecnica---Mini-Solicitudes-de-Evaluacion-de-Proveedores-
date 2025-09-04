@@ -1,24 +1,25 @@
 import { useState } from 'react';
 
-function Login() {
-  const [email, setEmail] = useState('administrador@gmail.com');
-  const [password, setPassword] = useState('admin123');
+function Login({ onLoginSuccess }) {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     setError('');
+    setIsLoading(true);
 
     const formData = new URLSearchParams();
     formData.append('username', email);
     formData.append('password', password);
 
     try {
-      const response = await fetch('http://127.0.0.1:8000/auth/login', {
+      const apiUrl = import.meta.env.VITE_API_BASE_URL;
+      const response = await fetch(`${apiUrl}/auth/login`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: formData,
       });
 
@@ -28,16 +29,13 @@ function Login() {
       }
 
       const data = await response.json();
-      
-      localStorage.setItem('access_token', data.access_token);
-      alert('¡Login exitoso! Token guardado, por ahora...');
-      
-      // Aquí es donde en una app real redirigirías al usuario
-      // window.location.href = '/requests';
+
+      onLoginSuccess(data.access_token);
 
     } catch (err) {
       setError(err.message);
-      console.error('Error de login:', err.message);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -47,24 +45,16 @@ function Login() {
       <form onSubmit={handleSubmit}>
         <div>
           <label>Email:</label>
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
+          <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
         </div>
         <div>
           <label>Contraseña:</label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
+          <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
         </div>
         {error && <p style={{ color: 'red' }}>{error}</p>}
-        <button type="submit">Entrar</button>
+        <button type="submit" disabled={isLoading}>
+          {isLoading ? 'Entrando...' : 'Entrar'}
+        </button>
       </form>
     </div>
   );
