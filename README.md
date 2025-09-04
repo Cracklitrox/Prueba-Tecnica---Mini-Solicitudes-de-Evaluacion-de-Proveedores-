@@ -15,6 +15,14 @@ Incluye un **mini-frontend en React (Vite)** para login y tabla de solicitudes.
 ## 🚀 Puesta en Marcha del Entorno de Desarrollo
 
 Sigue estos pasos para levantar el proyecto en tu máquina local.
+```bash
+# Crear y activar entorno virtual (solo si corres local sin Docker)
+python -m venv .venv
+# Windows
+.venv\Scripts\activate
+# Linux/Mac
+source .venv/bin/activate
+```
 
 ```bash
 # 1. Clonar y entrar al proyecto
