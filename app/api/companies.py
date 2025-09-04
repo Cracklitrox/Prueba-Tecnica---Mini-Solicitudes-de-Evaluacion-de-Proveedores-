@@ -98,3 +98,22 @@ def delete_company_endpoint(
 
     company_service.delete_company(db=db, company=company)
     return None
+
+
+@router.get("/{company_id}", response_model=company_schema.CompanyRead)
+def read_single_company(
+    *,
+    db: Session = Depends(deps.get_db),
+    company_id: uuid.UUID,
+    current_user: user_model.User = Depends(deps.get_current_user)
+):
+    """
+    Endpoint para obtener los detalles de una sola compañía por su ID.
+    """
+    company = company_service.get_company_by_id(db, company_id=company_id)
+    if not company:
+        raise HTTPException(
+            status_code=404,
+            detail="La compañía con este ID no existe.",
+        )
+    return company
