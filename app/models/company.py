@@ -2,7 +2,7 @@ import uuid
 from sqlalchemy import String, func, DateTime
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from datetime import datetime
-from app.db import Base
+from app.db.base_class import Base
 
 class Company(Base):
     __tablename__ = "companies"

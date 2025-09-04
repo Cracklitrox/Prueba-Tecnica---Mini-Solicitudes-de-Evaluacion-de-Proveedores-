@@ -8,14 +8,14 @@ from fastapi.security import OAuth2PasswordRequestForm
 
 router = APIRouter()
 
-@router.post("/register", response_model=user_schema.UserRead)
+@router.post("/register", response_model=user_schema.UserRead, status_code=201)
 def register_user(user: user_schema.UserCreate, db: Session = Depends(get_db)):
     """
     Endpoint para registrar un nuevo usuario.
     """
     db_user = user_service.get_user_by_email(db, email=user.email)
     if db_user:
-        raise HTTPException(status_code=400, detail="El email ya está registrado")
+        raise HTTPException(status_code=400, detail="El email/usuario ya está registrado")
 
     new_user = user_service.create_user(db=db, user=user)
     return new_user

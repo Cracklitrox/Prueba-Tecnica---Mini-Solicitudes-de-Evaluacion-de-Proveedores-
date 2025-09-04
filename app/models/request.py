@@ -3,7 +3,7 @@ import sqlalchemy as sa
 from sqlalchemy import String, Integer, JSON, ForeignKey, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from datetime import datetime
-from app.db import Base
+from app.db.base_class import Base
 from app.models.enums import StatusRequestEnum as StatusEnum
 
 # Evita problemas de importación circular

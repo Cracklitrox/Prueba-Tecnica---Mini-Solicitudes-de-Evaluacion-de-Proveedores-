@@ -1,6 +1,6 @@
 import uuid
 from datetime import datetime
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 # Importación de schema Company para anidación
 from .company import CompanyRead
@@ -26,5 +26,4 @@ class RequestRead(BaseModel):
     created_at: datetime
     company: CompanyRead
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)

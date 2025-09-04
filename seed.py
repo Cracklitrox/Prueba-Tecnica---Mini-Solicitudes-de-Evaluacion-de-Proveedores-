@@ -1,5 +1,5 @@
 import uuid
-from app.db import SessionLocal
+from app.db.db import SessionLocal
 from app.services import user_service, company_service, request_service
 from app.schemas.user import UserCreate
 from app.schemas.company import CompanyCreate
