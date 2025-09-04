@@ -1,8 +1,8 @@
-"""Creacion inicial de tablas User, Company, Request
+"""Creacion inicial de la base de datos
 
-Revision ID: f809f68a7e0b
+Revision ID: 08fbf564e947
 Revises: 
-Create Date: 2025-09-03 17:46:56.021982
+Create Date: 2025-09-03 21:04:09.360621
 
 """
 from typing import Sequence, Union
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = 'f809f68a7e0b'
+revision: str = '08fbf564e947'
 down_revision: Union[str, Sequence[str], None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -42,7 +42,7 @@ def upgrade() -> None:
     op.create_table('requests',
     sa.Column('id', sa.Uuid(), nullable=False),
     sa.Column('company_id', sa.Uuid(), nullable=False),
-    sa.Column('status', sa.String(length=20), nullable=False),
+    sa.Column('status', sa.Enum('PENDING', 'IN_REVIEW', 'APPROVED', 'REJECTED', name='statusenum'), nullable=False),
     sa.Column('risk_inputs', sa.JSON(), nullable=True),
     sa.Column('risk_score', sa.Integer(), nullable=True),
     sa.Column('created_at', sa.DateTime(), server_default=sa.text('now()'), nullable=False),
