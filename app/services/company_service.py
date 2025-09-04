@@ -7,18 +7,21 @@ from app.schemas import company as company_schema
 from datetime import datetime, timezone
 
 
-def get_companies(db: Session, skip: int = 0, limit: int = 10, search: str | None = None) -> tuple[list[company_model.Company], int]:
-    """
-    Obtiene una lista de compañías no borradas.
-    """
+def get_companies(db: Session, skip: int = 0, limit: int = 10, search: str | None = None, order_by: str | None = None) -> tuple[list[company_model.Company], int]:
     query = db.query(company_model.Company).filter(company_model.Company.deleted_at.is_(None))
-    
+
     if search:
         query = query.filter(company_model.Company.name.ilike(f"%{search}%"))
-    
+
+    if order_by:
+        if order_by.startswith("-"):
+            field = order_by[1:]
+            query = query.order_by(getattr(company_model.Company, field).desc())
+        else:
+            query = query.order_by(getattr(company_model.Company, order_by).asc())
+
     total = query.count()
     companies = query.offset(skip).limit(limit).all()
-    
     return companies, total
 
 def get_company_by_id(db: Session, company_id: uuid.UUID) -> company_model.Company | None:

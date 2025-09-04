@@ -4,6 +4,7 @@ from app.models import request as request_model
 from app.schemas import request as request_schema
 from app.services import risk as risk_service
 from sqlalchemy.orm import joinedload
+from app.models import company as company_model, enums as enums_model
 
 
 def create_request(db: Session, request_in: request_schema.RequestCreate) -> request_model.Request:
@@ -24,17 +25,36 @@ def create_request(db: Session, request_in: request_schema.RequestCreate) -> req
     return db_request
 
 
-def get_requests(db: Session, skip: int = 0, limit: int = 10) -> tuple[list[request_model.Request], int]:
+def get_requests(
+    db: Session, 
+    skip: int = 0, 
+    limit: int = 10, 
+    search: str | None = None,
+    status: enums_model.StatusRequestEnum | None = None,
+    risk_min: int | None = None,
+    risk_max: int | None = None
+) -> tuple[list[request_model.Request], int]:
     """
-    Obtiene una lista paginada de solicitudes, evitando la carga de N+1.
+    Obtiene una lista paginada de solicitudes, con filtros.
     """
-    query = db.query(request_model.Request)
+    query = db.query(request_model.Request).options(joinedload(request_model.Request.company))
+
+    if search:
+        query = query.join(company_model.Company).filter(company_model.Company.name.ilike(f"%{search}%"))
+
+    # --- AÑADE ESTA LÓGICA DE FILTROS ---
+    if status:
+        query = query.filter(request_model.Request.status == status)
+    if risk_min is not None:
+        query = query.filter(request_model.Request.risk_score >= risk_min)
+    if risk_max is not None:
+        query = query.filter(request_model.Request.risk_score <= risk_max)
+    # ------------------------------------
 
     total = query.count()
 
     requests = (
-        query.options(joinedload(request_model.Request.company)) #
-        .order_by(request_model.Request.created_at.desc())
+        query.order_by(request_model.Request.created_at.desc())
         .offset(skip)
         .limit(limit)
         .all()

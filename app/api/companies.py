@@ -40,14 +40,11 @@ def read_companies(
     page: int = 1,
     page_size: int = 10,
     q: str | None = None,
+    order_by: str | None = None,
     current_user: user_model.User = Depends(deps.get_current_user)
 ):
-    """
-    Endpoint para listar compañías con paginación y búsqueda.
-    Solo para usuarios autenticados.
-    """
     skip = (page - 1) * page_size
-    companies, total = company_service.get_companies(db, skip=skip, limit=page_size, search=q)
+    companies, total = company_service.get_companies(db, skip=skip, limit=page_size, search=q, order_by=order_by)
 
     return PaginatedResponse(
         total=total,

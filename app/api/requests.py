@@ -8,6 +8,7 @@ from app.schemas import request as request_schema
 from app.schemas.common import PaginatedResponse
 from app.schemas.request import RequestRead
 from app.services import request_service, company_service
+from app.models.enums import StatusRequestEnum
 
 router = APIRouter()
 
@@ -39,13 +40,25 @@ def read_requests(
     db: Session = Depends(deps.get_db),
     page: int = 1,
     page_size: int = 10,
+    q: str | None = None,
+    status: StatusRequestEnum | None = None,
+    risk_min: int | None = None,
+    risk_max: int | None = None,
     current_user: user_model.User = Depends(deps.get_current_user)
 ):
     """
-    Endpoint para listar solicitudes con paginación.
+    Endpoint para listar solicitudes con paginación y filtros.
     """
     skip = (page - 1) * page_size
-    requests, total = request_service.get_requests(db, skip=skip, limit=page_size)
+    requests, total = request_service.get_requests(
+        db, 
+        skip=skip, 
+        limit=page_size, 
+        search=q, 
+        status=status,
+        risk_min=risk_min,
+        risk_max=risk_max
+    )
 
     return PaginatedResponse(
         total=total,
