@@ -15,8 +15,15 @@ Incluye un **mini-frontend en React (Vite)** para login y tabla de solicitudes.
 ## 🚀 Puesta en Marcha del Entorno de Desarrollo
 
 Sigue estos pasos para levantar el proyecto en tu máquina local.
+
+# 1. Clonar y entrar al proyecto
 ```bash
-# Crear y activar entorno virtual (solo si corres local sin Docker)
+git clone https://github.com/Cracklitrox/PruebaTecnica.git
+cd PruebaTecnica
+```
+
+# 2. Creación de entorno virtual
+```bash
 python -m venv .venv
 # Windows
 .venv\Scripts\activate
@@ -24,29 +31,23 @@ python -m venv .venv
 source .venv/bin/activate
 ```
 
-```bash
-# 1. Clonar y entrar al proyecto
-git clone https://github.com/Cracklitrox/PruebaTecnica.git
-cd PruebaTecnica
-```
-
-# 2. Variables de entorno
+# 3. Variables de entorno
 ```bash
 cp .env.example .env
 ```
 
-# 3. Levantar backend + DB
+# 4. Levantar backend + DB
 ```bash
 docker compose up -d --build
 ```
 
-# 4. Migraciones y seed de datos
+# 5. Migraciones y seed de datos
 ```bash
 docker compose exec api alembic upgrade head
 docker compose exec api python seed.py
 ```
 
-# 5. Levantar frontend
+# 6. Levantar frontend
 ```bash
 cd frontend
 npm install
