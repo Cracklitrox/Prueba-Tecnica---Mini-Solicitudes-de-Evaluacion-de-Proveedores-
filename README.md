@@ -22,12 +22,7 @@ git clone https://github.com/Cracklitrox/PruebaTecnica.git
 cd PruebaTecnica
 ```
 
-# 2. Instalar las Dependencias de Python
-```bash
-pip install -r requirements.txt
-```
-
-# 3. Creación de entorno virtual
+# 2. Creación de entorno virtual
 ```bash
 python -m venv .venv
 # Windows
@@ -35,6 +30,12 @@ python -m venv .venv
 # Linux/Mac
 source .venv/bin/activate
 ```
+
+# 3. Instalar las Dependencias de Python
+```bash
+pip install -r requirements.txt
+```
+
 
 # 4. Variables de entorno
 ```bash

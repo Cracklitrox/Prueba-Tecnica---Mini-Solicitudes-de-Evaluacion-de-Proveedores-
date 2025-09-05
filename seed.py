@@ -13,9 +13,9 @@ def seed_data():
     try:
         # --- 1. Crear Usuario Admin ---
         print("Verificando usuario admin...")
-        admin_user = user_service.get_user_by_email(db, email="administrador@ejemplo.com")
+        admin_user = user_service.get_user_by_email(db, email="admin@example.com")
         if not admin_user:
-            user_in = UserCreate(email="administrador@ejemplo.com", password="admin123")
+            user_in = UserCreate(email="admin@example.com", password="Admin123!")
             user_service.create_user(db=db, user=user_in)
             print("Usuario admin creado.")
         else:
@@ -28,6 +28,10 @@ def seed_data():
             CompanyCreate(name="Dr. Simi", tax_id="88.888.888-8", country="CL"),
             CompanyCreate(name="Empresa Chilena", tax_id="99.248.412-K", country="CL"),
             CompanyCreate(name="Empresa Extranjera", tax_id=None, country="US"),
+            CompanyCreate(name="Acme SpA", tax_id="99.999.999-9", country="US"),
+            CompanyCreate(name="Globex Ltd.", tax_id="85.123.456-7", country="US"),
+            CompanyCreate(name="Initech", tax_id="87.654.321-0", country="US"),
+            CompanyCreate(name="Hooli", tax_id=None, country="CL"),
         ]
         
         created_companies = {}
@@ -41,23 +45,19 @@ def seed_data():
             created_companies[company.name] = company
 
         # --- 3. Crear Solicitudes ---
-        print("\nVerificando solicitudes...")
-        # Asegurarnos de que no hay solicitudes para evitar duplicados
-        requests, total = request_service.get_requests(db, skip=0, limit=1)
-        if total == 0:
-            print("Creando solicitudes de ejemplo...")
-            requests_to_create = [
-                RequestCreate(company_id=created_companies["Fruna"].id, risk_inputs=RiskInputsSchema(pep_flag=True, sanction_list=False, late_payments=0)),
-                RequestCreate(company_id=created_companies["Dr. Simi"].id, risk_inputs=RiskInputsSchema(pep_flag=False, sanction_list=True, late_payments=1)),
-                RequestCreate(company_id=created_companies["Empresa Chilena"].id, risk_inputs=RiskInputsSchema(pep_flag=False, sanction_list=False, late_payments=3)),
-                RequestCreate(company_id=created_companies["Empresa Extranjera"].id, risk_inputs=RiskInputsSchema(pep_flag=True, sanction_list=True, late_payments=3)),
-            ]
-            for req_data in requests_to_create:
-                request_service.create_request(db, request_in=req_data)
-            print("Solicitudes de ejemplo creadas.")
-        else:
-            print("Las solicitudes de ejemplo ya existen.")
-
+        print("Creando solicitudes de ejemplo...")
+        requests_to_create = [
+            RequestCreate(company_id=created_companies["Fruna"].id, risk_inputs=RiskInputsSchema(pep_flag=True, sanction_list=False, late_payments=0)),
+            RequestCreate(company_id=created_companies["Dr. Simi"].id, risk_inputs=RiskInputsSchema(pep_flag=False, sanction_list=True, late_payments=1)),
+            RequestCreate(company_id=created_companies["Empresa Chilena"].id, risk_inputs=RiskInputsSchema(pep_flag=False, sanction_list=False, late_payments=3)),
+            RequestCreate(company_id=created_companies["Empresa Extranjera"].id, risk_inputs=RiskInputsSchema(pep_flag=True, sanction_list=True, late_payments=3)),
+            RequestCreate(company_id=created_companies["Acme SpA"].id, risk_inputs=RiskInputsSchema(pep_flag=True, sanction_list=False, late_payments=7)),
+            RequestCreate(company_id=created_companies["Initech"].id, risk_inputs=RiskInputsSchema(pep_flag=False, sanction_list=False, late_payments=2)),
+            RequestCreate(company_id=created_companies["Hooli"].id, risk_inputs=RiskInputsSchema(pep_flag=True, sanction_list=True, late_payments=10)),
+        ]
+        for req_data in requests_to_create:
+            request_service.create_request(db, request_in=req_data)
+        print("Solicitudes de ejemplo creadas.")
         print("\n¡Seed completado!")
 
     finally:
