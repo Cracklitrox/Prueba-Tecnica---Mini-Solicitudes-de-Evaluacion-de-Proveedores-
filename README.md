@@ -22,7 +22,12 @@ git clone https://github.com/Cracklitrox/PruebaTecnica.git
 cd PruebaTecnica
 ```
 
-# 2. Creación de entorno virtual
+# 2. Instalar las Dependencias de Python
+```bash
+pip install -r requirements.txt
+```
+
+# 3. Creación de entorno virtual
 ```bash
 python -m venv .venv
 # Windows
@@ -31,27 +36,29 @@ python -m venv .venv
 source .venv/bin/activate
 ```
 
-# 3. Variables de entorno
+# 4. Variables de entorno
 ```bash
 cp .env.example .env
 ```
 
-# 4. Levantar backend + DB
+# 5. Levantar backend + DB
 ```bash
 docker compose up -d --build
 ```
 
-# 5. Migraciones y seed de datos
+Se recomienda esperar un tiempo estimado de entre 15 a 20 segundos para darle tiempo al Docker el iniciar los contenendores.
+
+# 6. Migraciones y seed de datos
 ```bash
 docker compose exec api alembic upgrade head
 docker compose exec api python seed.py
 ```
 
-# 6. Levantar frontend
+# 7. Levantar frontend
 ```bash
 cd frontend
 npm install
-echo "VITE_API_BASE_URL=http://localhost:8000" > .env
+cp .env.example .env
 npm run dev
 ```
 
